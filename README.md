@@ -58,3 +58,57 @@ Example request body:
 - Passwords are hashed before being stored.
 - The `email` field must be unique for each user.
 - The response does not return the raw password.
+
+## `POST /users/login`
+
+### Description
+Authenticates an existing user and returns a JWT token for future requests.
+
+### Request Body
+The endpoint expects JSON data with the following fields:
+
+- `email` (string, required) - Registered user email address
+- `password` (string, required) - User password
+
+Example request body:
+```json
+{
+  "email": "john.doe@example.com",
+  "password": "StrongPassword123"
+}
+```
+
+### Responses
+
+- `200 OK`
+  - Description: User successfully authenticated.
+  - Response body contains a JWT token and the authenticated user object.
+  - Example response:
+    ```json
+    {
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "user": {
+        "_id": "644f9f9f9f9f9f9f9f9f9f9f",
+        "fullname": {
+          "firstname": "John",
+          "lastname": "Doe"
+        },
+        "email": "john.doe@example.com",
+        "socketId": null
+      }
+    }
+    ```
+
+- `400 Bad Request`
+  - Description: Validation failed or required fields are missing.
+  - Response body contains validation error details.
+
+- `401 Unauthorized`
+  - Description: Invalid email or password.
+
+- `500 Internal Server Error`
+  - Description: Server error while processing the request.
+
+### Notes
+- The login endpoint does not expose password data.
+- The returned JWT token should be stored securely by the client.
